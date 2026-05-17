@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>اختبار التغذية والمعادن</title>
+<title>تحدي التغذية والمعادن</title>
 
 <style>
+
 body{
     font-family:Tahoma;
     margin:0;
@@ -29,18 +30,6 @@ body{
 }
 
 h1{text-align:center;}
-
-.section-pill{
-    padding:6px 12px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.1);
-    font-size:13px;
-}
-
-.section-pill.active{background:#22c55e;}
-
-.progress{height:8px;background:rgba(255,255,255,0.2);border-radius:20px;overflow:hidden;margin-bottom:15px;}
-.progress-bar{height:100%;width:0%;background:linear-gradient(to right,#00f5a0,#00d9f5);}
 
 .question{font-size:22px;margin:15px 0;}
 
@@ -99,32 +88,55 @@ h1{text-align:center;}
 <script>
 
 /* =========================
-   DATA
+   BANK OF QUESTIONS
 ========================= */
 
-let quizData = [
+let questionBank = [
+{question:"ما هي نسبة المعادن من الجسم؟", hint:"صغيرة جداً", options:["4%","10%","20%","1%"], correct:0, explanation:"4% فقط"},
 
-// Major Minerals
-{section:1, question:"ما هي نسبة المعادن من الجسم؟", hint:"صغيرة جداً", options:["4%","10%","20%","1%"], correct:0, explanation:"4% فقط"},
+{question:"أي معدن رئيسي؟", hint:"للعظام", options:["حديد","كالسيوم","زنك","يود"], correct:1, explanation:"الكالسيوم"},
 
-{section:1, question:"أي معدن رئيسي؟", hint:"للعظام", options:["حديد","كالسيوم","زنك","يود"], correct:1, explanation:"الكالسيوم"},
+{question:"فيتامين امتصاص الكالسيوم؟", hint:"الشمس", options:["A","B","C","D"], correct:3, explanation:"فيتامين D"},
 
-{section:1, question:"احتياج الكالسيوم؟", hint:"1000", options:["500","1000","1500","2000"], correct:1, explanation:"1000mg"},
+{question:"مكان تخزين الكالسيوم؟", hint:"العظام", options:["دم","عضلات","عظام","كبد"], correct:2, explanation:"العظام"},
 
-{section:1, question:"فيتامين امتصاص الكالسيوم؟", hint:"الشمس", options:["A","B","C","D"], correct:3, explanation:"D"},
+{question:"الهيموغلوبين؟", hint:"الدم", options:["إنسولين","هيموغلوبين","كولاجين","ألبومين"], correct:1, explanation:"ينقل الأكسجين"},
 
-{section:1, question:"مكان تخزين الكالسيوم؟", hint:"العظام", options:["دم","عضلات","عظام","كبد"], correct:2, explanation:"العظام"},
+{question:"نقص الحديد؟", hint:"دم", options:["سكري","أنيميا","ضغط","سمنة"], correct:1, explanation:"فقر الدم"},
 
-// Trace
-{section:2, question:"الهيموغلوبين؟", hint:"الدم", options:["إنسولين","هيموغلوبين","كولاجين","ألبومين"], correct:1, explanation:"ينقل الأكسجين"},
+{question:"اليود؟", hint:"الغدة", options:["كالسيوم","يود","زنك","حديد"], correct:1, explanation:"هرمونات الغدة"},
 
-{section:2, question:"نقص الحديد؟", hint:"دم", options:["سكري","أنيميا","ضغط","سمنة"], correct:1, explanation:"فقر الدم"},
+{question:"الزنك؟", hint:"مناعة", options:["زنك","حديد","صوديوم","بوتاسيوم"], correct:0, explanation:"المناعة"},
 
-{section:2, question:"اليود؟", hint:"الغدة", options:["كالسيوم","يود","زنك","حديد"], correct:1, explanation:"الهرمونات"},
+{question:"الصوديوم يوجد في؟", hint:"خارج الخلايا", options:["داخل الخلايا","خارج الخلايا","العظام","العضلات"], correct:1, explanation:"ECF"},
 
-{section:2, question:"الزنك؟", hint:"مناعة", options:["زنك","حديد","صوديوم","بوتاسيوم"], correct:0, explanation:"المناعة"}
+{question:"البوتاسيوم يوجد في؟", hint:"داخل الخلايا", options:["داخل الخلايا","خارج الخلايا","الدم","العظم"], correct:0, explanation:"ICF"},
 
+{question:"الفلورايد يحمي؟", hint:"الأسنان", options:["العظام","الأسنان","الدم","الكبد"], correct:1, explanation:"المينا"},
+
+{question:"نقص الكالسيوم يسبب؟", hint:"عظام لينة", options:["سكري","كساح","ضغط","أنيميا"], correct:1, explanation:"Rickets"},
+
+{question:"اليود في الملح؟", hint:"مدعم", options:["ملح عادي","ملح مدعم","سكر","ماء"], correct:1, explanation:"iodized salt"},
+
+{question:"السيلينيوم؟", hint:"مضاد أكسدة", options:["نحاس","سيلينيوم","حديد","كالسيوم"], correct:1, explanation:"Antioxidant"},
+
+{question:"المغنيسيوم؟", hint:"إنزيمات", options:["تنشيط إنزيمات","سكر","دهون","أكسجين"], correct:0, explanation:"+300 إنزيم"}
 ];
+
+/* =========================
+   CREATE RANDOM QUIZ (30)
+========================= */
+
+let quizData = [];
+
+function shuffle(array){
+    return array.sort(()=>Math.random()-0.5);
+}
+
+function generateQuiz(){
+    let shuffled = shuffle([...questionBank]);
+    quizData = shuffled.slice(0,30); // لو البنك أقل من 30 سيأخذ المتاح فقط
+}
 
 /* =========================
    STATE
@@ -133,11 +145,6 @@ let quizData = [
 let current = 0;
 let score = 0;
 let answered = false;
-
-let sectionStats = {
-    1:{correct:0,total:0},
-    2:{correct:0,total:0}
-};
 
 const qEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
@@ -149,27 +156,29 @@ const nextBtn = document.getElementById("nextBtn");
 ========================= */
 
 function load(){
-    answered = false;
-    infoEl.innerHTML="";
-    nextBtn.style.display="none";
 
-    let q = quizData[current];
+answered = false;
+infoEl.innerHTML="";
+nextBtn.style.display="none";
 
-    qEl.innerText = (current+1) + ". " + q.question;
+let q = quizData[current];
 
-    optionsEl.innerHTML="";
+qEl.innerText = (current+1) + ". " + q.question;
 
-    q.options.forEach((opt,i)=>{
-        let div = document.createElement("div");
-        div.className="option";
-        div.innerText=opt;
-        div.onclick=()=>select(i,div);
-        optionsEl.appendChild(div);
-    });
+optionsEl.innerHTML="";
+
+q.options.forEach((opt,i)=>{
+    let div = document.createElement("div");
+    div.className="option";
+    div.innerText=opt;
+    div.onclick=()=>select(i,div);
+    optionsEl.appendChild(div);
+});
+
 }
 
 /* =========================
-   SELECT ANSWER
+   SELECT
 ========================= */
 
 function select(i,el){
@@ -182,12 +191,9 @@ let all = document.querySelectorAll(".option");
 
 let isCorrect = i === q.correct;
 
-sectionStats[q.section].total++;
-
 if(isCorrect){
     el.classList.add("correct");
     score++;
-    sectionStats[q.section].correct++;
 }else{
     el.classList.add("wrong");
     all[q.correct].classList.add("correct");
@@ -223,16 +229,17 @@ if(current < quizData.length){
 };
 
 /* =========================
-   ANALYTICS PAGE
+   RESULTS
 ========================= */
 
 function showResults(){
 
 let percent = (score / quizData.length) * 100;
 
-let level = percent >= 80 ? "ممتاز 🎉" :
-            percent >= 50 ? "جيد 👍" :
-            "يحتاج تحسين 📚";
+let level =
+percent >= 80 ? "ممتاز 🎉" :
+percent >= 50 ? "جيد 👍" :
+"يحتاج تحسين 📚";
 
 document.querySelector(".container").innerHTML = `
 
@@ -242,16 +249,9 @@ document.querySelector(".container").innerHTML = `
 
 <h3>${level}</h3>
 
-<hr>
+<p>النسبة: ${percent.toFixed(1)}%</p>
 
-<h3>📊 تحليل الأداء</h3>
-
-<p>🔹 القسم 1: ${sectionStats[1].correct}/${sectionStats[1].total}</p>
-<p>🔹 القسم 2: ${sectionStats[2].correct}/${sectionStats[2].total}</p>
-
-<hr>
-
-<p style="text-align:center;color:#cbd5e1">
+<p style="text-align:center;color:#cbd5e1;margin-top:20px">
 هذا العمل خاص بـ <b>Dr. Reema</b> 💙
 </p>
 
@@ -259,6 +259,11 @@ document.querySelector(".container").innerHTML = `
 
 }
 
+/* =========================
+   START
+========================= */
+
+generateQuiz();
 load();
 
 </script>
